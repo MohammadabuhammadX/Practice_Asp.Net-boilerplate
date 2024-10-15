@@ -22,5 +22,7 @@ namespace Practice.Events
         Task<EventRegisterOutput> RegisterAsync(EntityDto<Guid> input);
 
         Task CancelRegistrationAsync(EntityDto<Guid> input);
+        Task AddSpeakerToEventAsync(Guid eventId, Guid speakerId);
+        Task RemoveSpeakerFromEventAsync(Guid eventId, Guid speakerId);
     }
 }

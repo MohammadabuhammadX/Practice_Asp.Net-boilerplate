@@ -3,6 +3,7 @@ using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Practice.Events
@@ -10,20 +11,22 @@ namespace Practice.Events
     public class SpeakerManager : ISpeakerManager
     {
         private readonly IRepository<Speaker, Guid> _speakerRepository;
+        private readonly IRepository<Event, Guid> _eventRepository;
 
-        public SpeakerManager(IRepository<Speaker, Guid> speakerRepository)
+        public SpeakerManager(IRepository<Speaker, Guid> speakerRepository, IRepository<Event, Guid> eventRepository)
         {
             _speakerRepository = speakerRepository;
+            _eventRepository = eventRepository;
         }
 
         public async Task<bool> CheckIfSpeakerExistsAsync(Guid id)
         {
-            return await _speakerRepository.GetAll().AnyAsync(x=>x.Id == id);
+            return await _speakerRepository.GetAll().AnyAsync(x => x.Id == id);
         }
 
         public async Task<Speaker> CreateSpeakerAsync(string name, string bio)
         {
-            var speaker =Speaker.Create(name,bio);
+            var speaker = Speaker.Create(name, bio);
             await _speakerRepository.InsertAsync(speaker);
             return speaker;
         }
@@ -44,16 +47,24 @@ namespace Practice.Events
             return await _speakerRepository.GetAsync(id);
         }
 
-        public Task<List<Speaker>> GetSpeakersByEventIdAsync(Guid eventId)
+        public async Task<List<Speaker>> GetSpeakersByEventIdAsync(Guid eventId)
         {
-            throw new NotImplementedException();
+            var eventEntity = await _eventRepository.GetAllIncluding(e => e.EventSpeakers)
+                .FirstOrDefaultAsync(e => e.Id == eventId);
+
+            if (eventEntity == null)
+            {
+                throw new UserFriendlyException("Event not found.");
+            }
+
+            return eventEntity.EventSpeakers.Select(es => es.Speaker).ToList();
         }
 
         public async Task<Speaker> UpdateSpeakerAsync(Guid id, string name, string bio)
         {
             var speaker = await _speakerRepository.GetAsync(id);
 
-            if(speaker == null) { throw new UserFriendlyException("Speaker not found"); }
+            if (speaker == null) { throw new UserFriendlyException("Speaker not found"); }
 
             speaker.Update(name, bio);
             await _speakerRepository.UpdateAsync(speaker);

@@ -1,11 +1,13 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
+using Abp.Domain.Entities.Auditing;
 using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Practice.Events.Dto
 {
-    public class SpeakerDto :FullAuditedEntityDto<Guid>
+    [AutoMap(typeof(Speaker))]
+    public class SpeakerDto :FullAuditedEntityDto<Guid>, IHasCreationTime
     {
         [Required]
         [StringLength(100)]

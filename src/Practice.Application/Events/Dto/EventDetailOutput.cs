@@ -15,5 +15,6 @@ namespace Practice.Events.Dto
         public virtual int MaxRegistrationCount { get; protected set; }
         public int RegistrationCount { get; set; }
         public ICollection<EventRegistrationDto> Registrations { get; set; }
+        public ICollection<SpeakerDto> Speakers { get; set; } //add
     }
 }

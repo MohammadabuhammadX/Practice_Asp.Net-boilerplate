@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Practice.Events.Dto
@@ -14,6 +15,8 @@ namespace Practice.Events.Dto
         public DateTime Date { get; set; }
         [Range(0, int.MaxValue)]
         public int MaxRegistrationCount { get; set; }
+
+        public List<Guid> SpeakerIds{ get; set; } // Modified 
 
     }
 }

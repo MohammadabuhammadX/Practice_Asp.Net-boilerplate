@@ -17,5 +17,6 @@ namespace Practice.Events.Dto
         public bool IsCancelled { get; set; }
         public virtual int MaxRegistrationCount { get; protected set; }
         public int RegistrationsCount { get; set; }
+        public ICollection<SpeakerDto> Speakers { get; set; } //add
     }
 }

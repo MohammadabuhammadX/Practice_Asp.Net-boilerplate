@@ -15,14 +15,26 @@ namespace Practice.Events
 
         Task<EventDetailOutput> GetDetailAsync(EntityDto<Guid> input);
 
-        Task CreateAsync(CreateEventInput input);
+        Task CreateEventAsync(CreateEventInput input);
 
         Task CancelAsync(EntityDto<Guid> input);
 
         Task<EventRegisterOutput> RegisterAsync(EntityDto<Guid> input);
 
-        Task CancelRegistrationAsync(EntityDto<Guid> input);
-        Task AddSpeakerToEventAsync(Guid eventId, Guid speakerId);
-        Task RemoveSpeakerFromEventAsync(Guid eventId, Guid speakerId);
+        //Task<List<SpeakerDto>> GetSpeakersByEventIdAsync(Guid eventId);
+
+        //Task AddSpeakerToEventAsync(Guid eventId, Guid speakerId);
+
+        //Task RemoveSpeakerFromEventAsync(Guid eventId, Guid speakerId);
+
+        Task CreateSpeakerAsync(CreateSpeakerInput input);
+
+        Task UpdateSpeakerAsync(UpdateSpeakerInput input);
+
+        Task DeleteSpeakerAsync(EntityDto<Guid> input);
+
+        Task<SpeakerDto> GetSpeakerAsync(EntityDto<Guid> input);
+
+        Task<ListResultDto<SpeakerDto>> GetAllSpeakersAsync();
     }
 }

@@ -24,9 +24,9 @@ namespace Practice.Events
             return await _speakerRepository.GetAll().AnyAsync(x => x.Id == id);
         }
 
-        public async Task<Speaker> CreateSpeakerAsync(string name, string bio)
+        public async Task<Speaker> CreateAsync(int tenatId, string name, string bio)
         {
-            var speaker = Speaker.Create(name, bio);
+            var speaker = Speaker.Create(tenatId, name, bio);
             await _speakerRepository.InsertAsync(speaker);
             return speaker;
         }
@@ -37,9 +37,12 @@ namespace Practice.Events
             await _speakerRepository.DeleteAsync(speaker);
         }
 
-        public async Task<List<Speaker>> GetAllSpeakersAsync()
+        public async Task<List<Speaker>> GetAllSpeakersAsync(int tenatId)
         {
-            return await _speakerRepository.GetAllListAsync();
+            return await _speakerRepository
+                .GetAll()
+                .Where(e => e.TenantId == tenatId)
+                .ToListAsync();
         }
 
         public async Task<Speaker> GetSpeakerAsync(Guid id)
@@ -49,7 +52,7 @@ namespace Practice.Events
 
         public async Task<List<Speaker>> GetSpeakersByEventIdAsync(Guid eventId)
         {
-            var eventEntity = await _eventRepository.GetAllIncluding(e => e.EventSpeakers)
+            var eventEntity = await _eventRepository.GetAllIncluding(e => e.Speakers)
                 .FirstOrDefaultAsync(e => e.Id == eventId);
 
             if (eventEntity == null)
@@ -57,7 +60,7 @@ namespace Practice.Events
                 throw new UserFriendlyException("Event not found.");
             }
 
-            return eventEntity.EventSpeakers.Select(es => es.Speaker).ToList();
+            return eventEntity.Speakers.ToList();
         }
 
         public async Task<Speaker> UpdateSpeakerAsync(Guid id, string name, string bio)

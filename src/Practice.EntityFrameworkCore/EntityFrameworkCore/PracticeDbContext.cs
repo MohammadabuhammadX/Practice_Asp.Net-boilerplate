@@ -15,8 +15,6 @@ namespace Practice.EntityFrameworkCore
         public virtual DbSet<EventRegistration> EventRegistrations { get; set; }
         public virtual DbSet<Speaker> Speakers { get; set; } 
 
-        public virtual DbSet<EventSpeaker> EventSpeakers { get; set; }
-
         public PracticeDbContext(DbContextOptions<PracticeDbContext> options)
             : base(options)
         {

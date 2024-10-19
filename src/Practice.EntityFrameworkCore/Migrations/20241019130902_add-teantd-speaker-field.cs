@@ -5,25 +5,25 @@
 namespace Practice.Migrations
 {
     /// <inheritdoc />
-    public partial class Upgraded_To_Abp_9_2 : Migration
+    public partial class addteantdspeakerfield : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "FailReason",
-                table: "AbpUserLoginAttempts",
-                type: "nvarchar(1024)",
-                maxLength: 1024,
-                nullable: true);
+            migrationBuilder.AddColumn<int>(
+                name: "TenantId",
+                table: "AppSpeakers",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "FailReason",
-                table: "AbpUserLoginAttempts");
+                name: "TenantId",
+                table: "AppSpeakers");
         }
     }
 }

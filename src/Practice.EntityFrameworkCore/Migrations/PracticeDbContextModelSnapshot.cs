@@ -1380,6 +1380,21 @@ namespace Practice.Migrations
                     b.ToTable("AbpWebhookSubscriptions");
                 });
 
+            modelBuilder.Entity("EventSpeaker", b =>
+                {
+                    b.Property<Guid>("EventsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SpeakersId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("EventsId", "SpeakersId");
+
+                    b.HasIndex("SpeakersId");
+
+                    b.ToTable("EventSpeaker");
+                });
+
             modelBuilder.Entity("Practice.Authorization.Roles.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -1669,51 +1684,6 @@ namespace Practice.Migrations
                     b.ToTable("AppEventRegistrations");
                 });
 
-            modelBuilder.Entity("Practice.Events.EventSpeaker", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("EventId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("SpeakerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId");
-
-                    b.HasIndex("SpeakerId");
-
-                    b.ToTable("AppEventSpeakers");
-                });
-
             modelBuilder.Entity("Practice.Events.Speaker", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1725,6 +1695,9 @@ namespace Practice.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1971,6 +1944,21 @@ namespace Practice.Migrations
                     b.Navigation("WebhookEvent");
                 });
 
+            modelBuilder.Entity("EventSpeaker", b =>
+                {
+                    b.HasOne("Practice.Events.Event", null)
+                        .WithMany()
+                        .HasForeignKey("EventsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Practice.Events.Speaker", null)
+                        .WithMany()
+                        .HasForeignKey("SpeakersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Practice.Authorization.Roles.Role", b =>
                 {
                     b.HasOne("Practice.Authorization.Users.User", "CreatorUser")
@@ -2030,25 +2018,6 @@ namespace Practice.Migrations
                     b.Navigation("Event");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Practice.Events.EventSpeaker", b =>
-                {
-                    b.HasOne("Practice.Events.Event", "Event")
-                        .WithMany("EventSpeakers")
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Practice.Events.Speaker", "Speaker")
-                        .WithMany()
-                        .HasForeignKey("SpeakerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Event");
-
-                    b.Navigation("Speaker");
                 });
 
             modelBuilder.Entity("Practice.MultiTenancy.Tenant", b =>
@@ -2151,8 +2120,6 @@ namespace Practice.Migrations
 
             modelBuilder.Entity("Practice.Events.Event", b =>
                 {
-                    b.Navigation("EventSpeakers");
-
                     b.Navigation("Registrations");
                 });
 #pragma warning restore 612, 618

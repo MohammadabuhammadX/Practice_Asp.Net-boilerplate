@@ -12,10 +12,12 @@ namespace Practice.Events
 
         [ForeignKey("Event")]
         public Guid EventId { get; set; }
-        public virtual Event Event { get; set; } 
+        public virtual Event Event { get; set; }
+
 
         [ForeignKey("Speaker")]
         public Guid SpeakerId { get; set; }
-        public virtual Speaker Speaker { get; set; } 
+        public virtual Speaker Speaker { get; set; }
+
     }
 }

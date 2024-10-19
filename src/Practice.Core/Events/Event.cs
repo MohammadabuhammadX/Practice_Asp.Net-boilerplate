@@ -38,12 +38,12 @@ namespace Practice.Events
         [ForeignKey("EventId")]
         public virtual ICollection<EventRegistration> Registrations { get; protected set; }
 
-        public virtual ICollection<EventSpeaker> EventSpeakers { get; protected set; }
+        public virtual ICollection<Speaker> Speakers { get; protected set; }
 
         protected Event()
         {
             Registrations = new Collection<EventRegistration>();
-            EventSpeakers = new Collection<EventSpeaker>();
+            Speakers = new Collection<Speaker>();
         }
 
         public static Event Create(int tenantId, string title, DateTime date, string description = null, int maxRegistrationCount = 0)
@@ -120,22 +120,22 @@ namespace Practice.Events
                 throw new UserFriendlyException("This event is canceled!");
             }
         }
-        public void AddSpeaker(Guid speakerId)
+        public void AddSpeaker(Speaker speaker)
         {
-            if (EventSpeakers.Any(x => x.SpeakerId == speakerId))
+            if (Speakers.Contains(speaker))
             {
-                throw new UserFriendlyException("This speaker is already associated with the event.");
+                throw new UserFriendlyException("This speaker is dublicated.");
             }
-            EventSpeakers.Add(new EventSpeaker { EventId = Id, SpeakerId = speakerId });
+            Speakers.Add(speaker);
         }
         public void RemoveSpeaker(Guid speakerId)
         {
-            var eventSpeaker = EventSpeakers.SingleOrDefault(x => x.SpeakerId  == speakerId);
-            if(eventSpeaker == null)
+            var speaker = Speakers.SingleOrDefault(x => x.Id  == speakerId);
+            if(speaker == null)
             {
                 throw new UserFriendlyException("This speaker is not associated with the event");
             }
-            EventSpeakers.Remove(eventSpeaker);
+            Speakers.Remove(speaker);
         }
     }
 }

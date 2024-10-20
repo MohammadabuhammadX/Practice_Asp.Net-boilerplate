@@ -147,19 +147,47 @@ namespace Practice.Events
             await _speakerManager.CreateAsync(tenatId, input.Name, input.Bio);
         }
 
-        public Task UpdateSpeakerAsync(UpdateSpeakerInput input)
+        public async Task<SpeakerDto> UpdateSpeakerAsync(UpdateSpeakerInput input)
         {
-            throw new NotImplementedException();
+            // Call the speaker manager's update method
+            var updatedSpeaker = await _speakerManager.UpdateSpeakerAsync(input.Id, input.Name, input.Bio);
+
+            // Optionally, return a DTO or any other information about the updated speaker
+            return new SpeakerDto
+            {
+                Id = updatedSpeaker.Id,
+                Name = updatedSpeaker.Name,
+                Bio = updatedSpeaker.Bio
+            };
         }
 
-        public Task DeleteSpeakerAsync(EntityDto<Guid> input)
+
+        public async Task DeleteSpeakerAsync(EntityDto<Guid> input)
         {
-            throw new NotImplementedException();
+            var tenatId = AbpSession.TenantId.Value;
+
+            if (!await _speakerManager.CheckIfSpeakerExistsAsync(input.Id, tenatId ))
+            {
+                throw new UserFriendlyException("Speaker not found.");
+            }
+
+            await _speakerManager.DeleteSpeakerAsync(input.Id);
+
         }
 
-        public Task<SpeakerDto> GetSpeakerAsync(EntityDto<Guid> input)
+
+        public async Task<SpeakerDto> GetSpeakerAsync(EntityDto<Guid> input)
         {
-            throw new NotImplementedException();
+            var tenantId = AbpSession.TenantId.Value;
+
+            var speaker = await _speakerManager.GetSpeakerAsync(input.Id);
+
+            if (speaker == null)
+            {
+                throw new UserFriendlyException("Speaker not found.");
+            }
+
+            return ObjectMapper.Map<SpeakerDto>(speaker);
         }
 
         public async Task<ListResultDto<SpeakerDto>> GetAllSpeakersAsync()

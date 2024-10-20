@@ -29,7 +29,7 @@ namespace Practice.Events
 
         Task CreateSpeakerAsync(CreateSpeakerInput input);
 
-        Task UpdateSpeakerAsync(UpdateSpeakerInput input);
+        Task <SpeakerDto>UpdateSpeakerAsync(UpdateSpeakerInput input);
 
         Task DeleteSpeakerAsync(EntityDto<Guid> input);
 

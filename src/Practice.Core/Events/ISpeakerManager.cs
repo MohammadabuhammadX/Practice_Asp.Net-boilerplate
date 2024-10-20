@@ -14,6 +14,6 @@ namespace Practice.Events
         Task<Speaker> GetSpeakerAsync(Guid id);
         Task<List<Speaker>> GetAllSpeakersAsync(int tenatId);
         Task<List<Speaker>> GetSpeakersByEventIdAsync(Guid eventId);
-        Task<bool> CheckIfSpeakerExistsAsync(Guid id);
+        Task<bool> CheckIfSpeakerExistsAsync(Guid id, int tenatId);
     }
 }

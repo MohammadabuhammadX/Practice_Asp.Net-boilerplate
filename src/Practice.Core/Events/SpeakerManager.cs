@@ -19,7 +19,7 @@ namespace Practice.Events
             _eventRepository = eventRepository;
         }
 
-        public async Task<bool> CheckIfSpeakerExistsAsync(Guid id)
+        public async Task<bool> CheckIfSpeakerExistsAsync(Guid id, int tenatId)
         {
             return await _speakerRepository.GetAll().AnyAsync(x => x.Id == id);
         }
